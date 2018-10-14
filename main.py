@@ -42,7 +42,9 @@ class PopUp(QWidget):
 
     def PopupUI(self):
         self.setGeometry(150, 150, 150, 150)
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.Tool | Qt.WindowStaysOnTopHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setAttribute(Qt.WA_ShowWithoutActivating)
 
         self.show()
 
