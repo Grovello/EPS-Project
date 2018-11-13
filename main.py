@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import ( QWidget, QToolTip,
-    QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QMessageBox)
-from PyQt5.QtGui import QFont
+    QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QMessageBox, QGridLayout, QDesktopWidget)
+from PyQt5.QtGui import QFont , QPainter, QBrush, QColor
 from PyQt5.QtCore import *
 
 class MainWindow(QWidget):
@@ -41,10 +41,53 @@ class PopUp(QWidget):
         self.PopupUI()
 
     def PopupUI(self):
-        self.setGeometry(150, 150, 150, 150)
+        self.setGeometry(100, 100, 100, 50)
+
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.darkGray)
+        self.setPalette(p)
+
+        self.setGeometry(QDesktopWidget().screenGeometry().width() - 68 - self.width() + QDesktopWidget().screenGeometry().x(),
+                         QDesktopWidget().screenGeometry().height() - 40 - self.height() +QDesktopWidget().screenGeometry().y(),
+                         self.width(), self.height())
+
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Tool | Qt.WindowStaysOnTopHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        #self.setAttribute(Qt.WA_TranslucentBackground)
         self.setAttribute(Qt.WA_ShowWithoutActivating)
+
+        animation = QPropertyAnimation(self)
+        animation.setTargetObject(self)
+        #animation.setPropertyName("popupOpacity")
+        self.setWindowOpacity(10)
+
+
+        popup_message = QLabel()
+        popup_message.setText('It`s time to have a break!')
+        popup_message.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        popup_message.setStyleSheet("color : white;"
+                                    "margin-top: 6px;"
+                                    "margin-bottom: 6px;"
+                                    "margin-left: 10px;"
+                                    "margin-right: 10px;")
+
+
+        layout = QGridLayout(self)
+        layout.addWidget(popup_message)
+
+        painter = QPainter(self)
+#        painter.setRenderHint(self)
+
+        roundRect = QRect()
+        roundRect.setX(self.rect().x() +5)
+        roundRect.setY(self.rect().y() +5)
+        roundRect.setWidth(self.rect().width() - 10)
+        roundRect.setHeight(self.rect().height() - 10)
+        painter.setBrush(QBrush(QColor(0, 0, 0, 180)))
+        painter.setPen(Qt.NoPen)
+
+        painter.drawRoundedRect(roundRect,10,10)
+
 
         self.show()
 
